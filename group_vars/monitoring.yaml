@@ -2,6 +2,7 @@ packages:
   apt:
     monitoring:
       - prometheus
+      - prometheus-alertmanager
   snap:
     monitoring:
       - grafana

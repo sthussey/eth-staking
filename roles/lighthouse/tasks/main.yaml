@@ -37,6 +37,7 @@
     owner: lighthouse
     group: lighthouse
     mode: '0644'
+  register: lighthouse_download
   become: true
 
 - name: Extract lighthouse binary
@@ -44,6 +45,7 @@
     src: /home/lighthouse/downloads/lighthouse-{{ lighthouse.version }}.tgz
     dest: /usr/local/bin
     remote_src: true
+  when: lighthouse_download.changed
   become: true
 
 - name: Ensure correct binary permissions

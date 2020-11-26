@@ -1,0 +1,9 @@
+- name: Configure prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart Prometheus
