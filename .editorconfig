@@ -13,3 +13,6 @@ trim_trailing_whitespace = true
 
 [*.y{a,}ml{.j2,}]
 indent_size = 2
+
+[*.json{.j2,}]
+indent_size = 2

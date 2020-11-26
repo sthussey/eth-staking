@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: Geth
+    type: file
+    folder: Geth
+    allowUiUpdates: false
+    options:
+      path: /var/snap/grafana/common/dashboards/geth
+      foldersFromFilesStructure: true

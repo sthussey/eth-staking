@@ -21,6 +21,8 @@
     - conf/provisioning/dashboards
     - conf/provisioning/datasources
     - conf/provisioning/notifiers
+    - dashboards
+    - dashboards/geth
     - dashboards/lighthouse
   become: true
 
@@ -46,6 +48,18 @@
   become: true
   notify: Restart Grafana
 
+- name: Copy Grafana dashboards for Geth
+  copy:
+    src: '{{ item }}'
+    dest: /var/snap/grafana/common/dashboards/geth/{{ item | basename }}
+    owner: root
+    group: root
+    mode: '0644'
+  with_fileglob:
+    - '{{ playbook_dir }}/roles/monitoring/files/grafana/dashboards/geth/*.json'
+  become: true
+  notify: Restart Grafana
+
 - name: Configure Grafana provisioning
   copy:
     src: grafana/provisioning/{{ item }}
@@ -54,7 +68,8 @@
     group: root
     mode: '0644'
   with_items:
-    - datasources/prometheus.yaml
+    - dashboards/geth.yaml
     - dashboards/lighthouse.yaml
+    - datasources/prometheus.yaml
   become: true
   notify: Restart Grafana
