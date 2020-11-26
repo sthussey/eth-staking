@@ -6,7 +6,8 @@ After=syslog.target network.target
 User=lighthouse
 Group=lighthouse
 Environment=HOME=/home/lighthouse
-ExecStart=/usr/local/bin/lighthouse vc
+# Due to a bug in 1.0, we need to use --delete-lockfiles to avoid issues on restart.
+ExecStart=/usr/local/bin/lighthouse vc --delete-lockfiles
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90
