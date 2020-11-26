@@ -1,0 +1,13 @@
+- name: Restart beacon
+  systemd:
+    name: beacon
+    daemon_reload: true
+    state: restarted
+  become: true
+
+- name: Restart validator
+  systemd:
+    name: validator
+    daemon_reload: true
+    state: restarted
+  become: true

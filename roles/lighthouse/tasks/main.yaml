@@ -47,6 +47,9 @@
     remote_src: true
   when: lighthouse_download.changed
   become: true
+  notify:
+    - Restart beacon
+    - Restart validator
 
 - name: Ensure correct binary permissions
   file:
@@ -57,12 +60,22 @@
     mode: '0755'
   become: true
 
-- name: Configure systemd unit
+- name: Configure beacon systemd unit
   copy:
-    src: lighthouse.service
-    dest: /etc/systemd/system/lighthouse.service
+    src: beacon.service
+    dest: /etc/systemd/system/beacon.service
     owner: root
     group: root
     mode: '0664'
   become: true
-#  notify: Restart lighthouse
+  notify: Restart beacon
+
+#- name: Configure validator systemd unit
+#  copy:
+#    src: validator.service
+#    dest: /etc/systemd/system/validator.service
+#    owner: root
+#    group: root
+#    mode: '0664'
+#  become: true
+#  notify: Restart validator

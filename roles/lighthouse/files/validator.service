@@ -6,7 +6,7 @@ After=syslog.target network.target
 User=lighthouse
 Group=lighthouse
 Environment=HOME=/home/lighthouse
-ExecStart=/usr/local/bin/lighthouse
+ExecStart=/usr/local/bin/lighthouse vc
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90
