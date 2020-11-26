@@ -1,6 +1,13 @@
 - hosts: all
   roles:
     - packages
+    - system
 - hosts: beacon
   roles:
     - geth
+- hosts: validator
+  roles:
+    - lighthouse
+- hosts: monitoring
+  roles:
+    - monitoring

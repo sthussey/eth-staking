@@ -1,0 +1,17 @@
+[Unit]
+Description=Lighthouse
+After=syslog.target network.target
+
+[Service]
+User=lighthouse
+Group=lighthouse
+Environment=HOME=/home/lighthouse
+ExecStart=/usr/local/bin/lighthouse
+KillMode=process
+KillSignal=SIGINT
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

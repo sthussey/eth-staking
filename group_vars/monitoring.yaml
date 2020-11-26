@@ -1,0 +1,7 @@
+packages:
+  apt:
+    monitoring:
+      - prometheus
+  snap:
+    monitoring:
+      - grafana

@@ -1,0 +1,66 @@
+- name: Create lighthouse group
+  group:
+    name: lighthouse
+    state: present
+  become: true
+
+- name: Create lighthouse user
+  user:
+    name: lighthouse
+    groups: lighthouse
+    shell: /usr/bin/false
+  become: true
+
+- name: Restrict lighthouse home directory permissions
+  file:
+    path: /home/lighthouse
+    state: directory
+    owner: lighthouse
+    group: lighthouse
+    mode: '0750'
+  become: true
+
+- name: Create downloads directory
+  file:
+    path: /home/lighthouse/downloads
+    state: directory
+    owner: lighthouse
+    group: lighthouse
+    mode: '0750'
+  become: true
+
+- name: Download lighthouse
+  get_url:
+    url: "https://github.com/sigp/lighthouse/releases/download/{{ lighthouse.version }}/lighthouse-{{ lighthouse.version }}-x86_64-unknown-linux-gnu.tar.gz"
+    dest: /home/lighthouse/downloads/lighthouse-{{ lighthouse.version }}.tgz
+    checksum: "{{ lighthouse.checksum }}"
+    owner: lighthouse
+    group: lighthouse
+    mode: '0644'
+  become: true
+
+- name: Extract lighthouse binary
+  unarchive:
+    src: /home/lighthouse/downloads/lighthouse-{{ lighthouse.version }}.tgz
+    dest: /usr/local/bin
+    remote_src: true
+  become: true
+
+- name: Ensure correct binary permissions
+  file:
+    path: /usr/local/bin/lighthouse
+    state: file
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+- name: Configure systemd unit
+  copy:
+    src: lighthouse.service
+    dest: /etc/systemd/system/lighthouse.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+#  notify: Restart lighthouse
