@@ -8,7 +8,7 @@
   user:
     name: geth
     groups: geth
-    shell: /usr/bin/false
+    shell: /usr/sbin/nologin
   become: true
 
 - name: Restrict geth home directory permissions
