@@ -1,4 +1,4 @@
-- name: Configure prometheus
+- name: Configure Prometheus
   template:
     src: prometheus.yml.j2
     dest: /etc/prometheus/prometheus.yml
@@ -7,3 +7,39 @@
     mode: '0644'
   become: true
   notify: Restart Prometheus
+
+- name: Ensure grafana configuration directories exist
+  file:
+    path: /var/snap/grafana/common/{{ item }}
+    state: directory
+    owner: root
+    group: root
+    mode: '0750'
+  with_items:
+    - conf
+    - conf/provisioning
+    - conf/provisioning/dashboards
+    - conf/provisioning/datasources
+  become: true
+
+- name: Configure Grafana
+  copy:
+    src: grafana/custom.ini
+    dest: /var/snap/grafana/common/conf/custom.ini
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart Grafana
+
+- name: Configure Grafana provisioning
+  copy:
+    src: grafana/provisioning/{{ item }}
+    dest: /var/snap/grafana/common/conf/provisioning/{{ item }}
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - datasources/prometheus.yaml
+  become: true
+  notify: Restart Grafana
