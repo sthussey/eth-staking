@@ -20,6 +20,8 @@
     - conf/provisioning
     - conf/provisioning/dashboards
     - conf/provisioning/datasources
+    - conf/provisioning/notifiers
+    - dashboards/lighthouse
   become: true
 
 - name: Configure Grafana
@@ -32,6 +34,18 @@
   become: true
   notify: Restart Grafana
 
+- name: Copy Grafana dashboards for Lighthouse
+  copy:
+    src: '{{ item }}'
+    dest: /var/snap/grafana/common/dashboards/lighthouse/{{ item | basename }}
+    owner: root
+    group: root
+    mode: '0644'
+  with_fileglob:
+    - '{{ playbook_dir }}/vendor/lighthouse-metrics/dashboards/*.json'
+  become: true
+  notify: Restart Grafana
+
 - name: Configure Grafana provisioning
   copy:
     src: grafana/provisioning/{{ item }}
@@ -41,5 +55,6 @@
     mode: '0644'
   with_items:
     - datasources/prometheus.yaml
+    - dashboards/lighthouse.yaml
   become: true
   notify: Restart Grafana

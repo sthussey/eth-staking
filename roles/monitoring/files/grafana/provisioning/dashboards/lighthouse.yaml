@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: Lighthouse
+    type: file
+    folder: Lighthouse
+    allowUiUpdates: false
+    options:
+      path: /var/snap/grafana/common/dashboards/lighthouse
+      foldersFromFilesStructure: true

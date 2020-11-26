@@ -1,0 +1,3 @@
+[submodule "vendor/lighthouse-metrics"]
+	path = vendor/lighthouse-metrics
+	url = https://github.com/sigp/lighthouse-metrics.git
