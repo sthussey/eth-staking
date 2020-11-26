@@ -1,0 +1,31 @@
+- name: Create geth group
+  group:
+    name: geth
+    state: present
+  become: true
+
+- name: Create geth user
+  user:
+    name: geth
+    groups: geth
+    shell: /usr/bin/false
+  become: true
+
+- name: Restrict geth home directory permissions
+  file:
+    path: /home/geth
+    state: directory
+    owner: geth
+    group: geth
+    mode: '0750'
+  become: true
+
+- name: Configure systemd unit
+  copy:
+    src: geth.service
+    dest: /etc/systemd/system/geth.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+  notify: Restart geth

@@ -1,0 +1,9 @@
+packages:
+  apt:
+    common:
+      - chrony
+      - curl
+      - net-tools
+      - prometheus
+      - vim-nox
+  snap: {}

@@ -1,0 +1,7 @@
+packages:
+  apt_repositories:
+    beacon:
+      - ppa:ethereum/ethereum
+  apt:
+    beacon:
+      - ethereum

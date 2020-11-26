@@ -1,0 +1,25 @@
+
+- name: Upgrade all packages
+  become: true
+  apt:
+    name: "*"
+    state: latest
+    force_apt_get: true
+
+- name: Install apt repositories
+  become: true
+  apt_repository:
+    repo: "{{ item }}"
+  with_items: "{{ packages.apt_repositories.values() | flatten | sort | unique | default([]) }}"
+
+- name: Install packages
+  become: true
+  apt:
+    name: "{{ packages.apt.values() | flatten | sort | unique | default([]) }}"
+    state: present
+
+- name: Install snaps
+  become: true
+  shell: "snap install {{ item }}"
+  changed_when: false
+  with_items: "{{ packages.snap.values() | flatten | sort | unique | default([]) }}"
