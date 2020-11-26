@@ -68,6 +68,7 @@
     group: root
     mode: '0664'
   become: true
+  when: "'beacon' in group_names"
   notify: Restart beacon
 
 #- name: Configure validator systemd unit
@@ -78,4 +79,5 @@
 #    group: root
 #    mode: '0664'
 #  become: true
+#  when: "'validator' in group_names"
 #  notify: Restart validator
