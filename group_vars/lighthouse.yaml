@@ -1,3 +1,8 @@
 lighthouse:
   checksum: sha256:1d84b49b66bd267fdf86e03d28b58d150876ae4991c05f7cf6737180197c8a73
   version: v1.0.1
+
+configuration:
+  lighthouse:
+    network: "mainnet"
+    datadir_base: "/home/lighthouse/.lighthouse/"
