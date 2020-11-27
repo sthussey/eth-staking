@@ -29,6 +29,15 @@
     mode: '0644'
   become: true
 
+- name: Set data directory permissions
+  file:
+    path: "{{ configuration.geth.node.datadir }}"
+    state: directory
+    owner: geth
+    group: geth
+    mode: '0750'
+  become: true
+
 - name: Configure systemd unit
   template:
     src: geth.service.j2
