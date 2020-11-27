@@ -4,6 +4,7 @@ packages:
       - chrony
       - curl
       - net-tools
+      - nethogs
       - prometheus-node-exporter
       - vim-nox
   snap: {}
