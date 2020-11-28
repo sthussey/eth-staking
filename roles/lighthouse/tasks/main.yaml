@@ -60,9 +60,21 @@
     mode: '0755'
   become: true
 
+- name: Set data directory permissions
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: lighthouse
+    group: lighthouse
+    mode: '0750'
+  become: true
+  loop:
+    - "{{ configuration.lighthouse.datadir_base }}"
+    - "{{ configuration.lighthouse.datadir_base }}/{{ configuration.lighthouse.network }}"
+
 - name: Configure beacon systemd unit
-  copy:
-    src: beacon.service
+  template:
+    src: beacon.service.j2
     dest: /etc/systemd/system/beacon.service
     owner: root
     group: root
@@ -72,8 +84,8 @@
   notify: Restart beacon
 
 - name: Configure validator systemd unit
-  copy:
-    src: validator.service
+  template:
+    src: validator.service.j2
     dest: /etc/systemd/system/validator.service
     owner: root
     group: root
