@@ -5,5 +5,5 @@ lighthouse:
 configuration:
   lighthouse:
     network: "mainnet"
-    datadir_base: "/home/lighthouse/.lighthouse/"
+    datadir_base: "/home/lighthouse/.lighthouse"
     graffiti: null

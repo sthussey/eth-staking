@@ -7,7 +7,7 @@ User=lighthouse
 Group=lighthouse
 Environment=HOME=/home/lighthouse
 # Due to a bug in 1.0, we need to use --delete-lockfiles to avoid issues on restart.
-ExecStart=/usr/local/bin/lighthouse --network "{{ configuration.lighthouse.network | default('mainnet') }}" --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" vc --delete-lockfiles --metrics --metrics-address=0.0.0.0 {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %}
+ExecStart=/usr/local/bin/lighthouse --network "{{ configuration.lighthouse.network | default('mainnet') }}" --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" vc {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} --metrics --metrics-address=0.0.0.0 --delete-lockfiles
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90
