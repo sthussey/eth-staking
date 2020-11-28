@@ -47,3 +47,10 @@
     mode: '0664'
   become: true
   notify: Restart geth
+
+- name: Enable geth service
+  systemd:
+    name: geth
+    state: started
+    enabled: true
+  become: true

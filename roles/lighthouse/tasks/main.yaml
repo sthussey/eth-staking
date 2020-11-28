@@ -83,6 +83,14 @@
   when: "'beacon' in group_names"
   notify: Restart beacon
 
+- name: Enable beacon service
+  systemd:
+    name: beacon
+    state: started
+    enabled: true
+  when: "'beacon' in group_names"
+  become: true
+
 - name: Configure validator systemd unit
   template:
     src: validator.service.j2
@@ -93,3 +101,11 @@
   become: true
   when: "'validator' in group_names"
   notify: Restart validator
+
+- name: Enable validator service
+  systemd:
+    name: validator
+    state: started
+    enabled: true
+  when: "'validator' in group_names"
+  become: true
