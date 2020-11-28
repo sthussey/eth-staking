@@ -7,7 +7,7 @@ User=lighthouse
 Group=lighthouse
 Environment=HOME=/home/lighthouse
 # Due to a bug in 1.0, we need to use --delete-lockfiles to avoid issues on restart.
-ExecStart=/usr/local/bin/lighthouse vc --delete-lockfiles
+ExecStart=/usr/local/bin/lighthouse vc --delete-lockfiles --metrics --metrics-address=0.0.0.0
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90

@@ -55,10 +55,9 @@ scrape_configs:
         - {{ host }}:5054
       {% endfor %}
 
-# Validator does not yet support metrics
-#  - job_name: validator
-#    static_configs:
-#      - targets:
-#      {% for host in groups['lighthouse'] %}
-#        - {{ host }}:5062
-#      {% endfor %}
+  - job_name: validator
+    static_configs:
+      - targets:
+      {% for host in groups['lighthouse'] %}
+        - {{ host }}:5064
+      {% endfor %}

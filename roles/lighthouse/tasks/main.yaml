@@ -71,13 +71,13 @@
   when: "'beacon' in group_names"
   notify: Restart beacon
 
-#- name: Configure validator systemd unit
-#  copy:
-#    src: validator.service
-#    dest: /etc/systemd/system/validator.service
-#    owner: root
-#    group: root
-#    mode: '0664'
-#  become: true
-#  when: "'validator' in group_names"
-#  notify: Restart validator
+- name: Configure validator systemd unit
+  copy:
+    src: validator.service
+    dest: /etc/systemd/system/validator.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+  when: "'validator' in group_names"
+  notify: Restart validator
