@@ -5,3 +5,12 @@ packages:
   apt:
     beacon:
       - ethereum
+
+configuration:
+  geth:
+    path: /etc/geth.toml
+    eth:
+      networkid: 1
+    node:
+      datadir: "~/.ethereum"
+

@@ -20,9 +20,18 @@
     mode: '0750'
   become: true
 
+- name: Configure geth
+  template:
+    src: geth.toml.j2
+    dest:  "{{ configuration.geth.path }}"
+    owner: geth
+    group: geth
+    mode: '0644'
+  become: true
+
 - name: Configure systemd unit
-  copy:
-    src: geth.service
+  template:
+    src: geth.service.j2
     dest: /etc/systemd/system/geth.service
     owner: root
     group: root
