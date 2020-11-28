@@ -12,5 +12,5 @@ configuration:
     eth:
       networkid: 1
     node:
-      datadir: "~/.ethereum"
+      datadir: /home/geth/.ethereum
 

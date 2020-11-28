@@ -1,5 +1,5 @@
 [Eth]
-NetworkId = {{ configuration.geth.eth.networkid | default "1" }}
+NetworkId = {{ configuration.geth.eth.networkid | default(1) }}
 
 [Node]
-DataDir =  {{ configuratino.geth.node.datadir | default "~/.ethereum" }}
+DataDir = "{{ configuration.geth.node.datadir | default("/home/geth/.ethereum") }}"
