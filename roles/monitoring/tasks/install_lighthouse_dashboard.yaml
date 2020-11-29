@@ -1,0 +1,26 @@
+- name: Stage raw dashboard ({{ item | basename }})
+  copy:
+    src: '{{ item }}'
+    dest: /var/snap/grafana/common/staging/lighthouse/dashboards/raw/{{ item | basename }}
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+- name: Substitute data source ({{ item | basename }})
+  shell:
+    chdir: /var/snap/grafana/common/staging/lighthouse/dashboards
+    cmd: envsubst < "raw/{{ item | basename }}" > "final/{{item | basename}}"
+  changed_when: false
+  environment:
+    DS_PROMETHEUS: default
+  become: true
+- name: Copy substituted dashboard ({{ item | basename }})
+  copy:
+    remote_src: true
+    src: /var/snap/grafana/common/staging/lighthouse/dashboards/final/{{ item | basename }}
+    dest: /var/snap/grafana/common/dashboards/lighthouse/{{ item | basename }}
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart Grafana

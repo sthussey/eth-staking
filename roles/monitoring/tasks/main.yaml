@@ -25,6 +25,11 @@
     - dashboards/geth
     - dashboards/lighthouse
     - dashboards/node
+    - staging
+    - staging/lighthouse
+    - staging/lighthouse/dashboards
+    - staging/lighthouse/dashboards/final
+    - staging/lighthouse/dashboards/raw
   become: true
 
 - name: Configure Grafana
@@ -38,16 +43,9 @@
   notify: Restart Grafana
 
 - name: Copy Grafana dashboards for Lighthouse
-  copy:
-    src: '{{ item }}'
-    dest: /var/snap/grafana/common/dashboards/lighthouse/{{ item | basename }}
-    owner: root
-    group: root
-    mode: '0644'
+  include_tasks: install_lighthouse_dashboard.yaml
   with_fileglob:
     - '{{ playbook_dir }}/vendor/lighthouse-metrics/dashboards/*.json'
-  become: true
-  notify: Restart Grafana
 
 - name: Copy Grafana dashboards for Geth
   copy:
