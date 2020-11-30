@@ -8,6 +8,18 @@
   become: true
   notify: Restart Prometheus
 
+- name: Customize Prometheus service
+  template:
+    src: prometheus.env.j2
+    dest: /etc/default/prometheus
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: configuration.prometheus.storage.path | default(False) or
+        configuration.prometheus.storage.retention | default(False)
+  notify: Restart Prometheus
+
 - name: Ensure grafana configuration directories exist
   file:
     path: /var/snap/grafana/common/{{ item }}

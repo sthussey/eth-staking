@@ -6,3 +6,9 @@ packages:
   snap:
     monitoring:
       - grafana
+
+configuration:
+  prometheus:
+    storage:
+      path: null
+      retention: null
