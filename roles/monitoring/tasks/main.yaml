@@ -20,6 +20,17 @@
         configuration.prometheus.storage.retention | default(False)
   notify: Restart Prometheus
 
+- name: Configure Alertmanager
+  template:
+    src: alertmanager.yml.j2
+    dest: /etc/prometheus/alertmanager.yml
+    owner: prometheus
+    group: root
+    mode: '0600'
+  become: true
+  when: configuration.alertmanager.receiver | length > 0
+  notify: Restart Alertmanager
+
 - name: Ensure grafana configuration directories exist
   file:
     path: /var/snap/grafana/common/{{ item }}

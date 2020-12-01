@@ -12,3 +12,5 @@ configuration:
     storage:
       path: null
       retention: null
+  alertmanager:
+    receivers: []
