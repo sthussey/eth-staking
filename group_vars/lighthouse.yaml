@@ -7,3 +7,5 @@ configuration:
     network: "mainnet"
     datadir_base: "/home/lighthouse/.lighthouse"
     graffiti: null
+    eth1_endpoints:
+      - http://localhost:8545
