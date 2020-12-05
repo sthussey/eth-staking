@@ -1,0 +1,5 @@
+groups:
+{{ configuration.prometheus.alerts | to_yaml }}
+{% if configuration.prometheus.custom_alerts | default([]) | length > 0 %}
+{{ configuration.prometheus.custom_alerts | to_yaml }}
+{% endif %}

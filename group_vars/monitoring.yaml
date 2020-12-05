@@ -6,3 +6,33 @@ packages:
   snap:
     monitoring:
       - grafana
+
+configuration:
+  prometheus:
+    storage:
+      path: null
+      retention: null
+    alerts:
+      - name: geth_internal
+        rules:
+         - alert: GethServiceDown
+           expr: absent(up{job="geth"}) or up{job="geth"} < 1
+           for: 5m
+           annotations:
+             summary: The geth service is down
+      - name: beacon_internal
+        rules:
+         - alert: BeaconServiceDown
+           expr: absent(up{job="beacon"}) or up{job="beacon"} < 1
+           for: 5m
+           annotations:
+             summary: The beacon service is down
+      - name: validator_internal
+        rules:
+         - alert: ValidatorServiceDown
+           expr: absent(up{job="validator"}) or up{job="validator"} < 1
+           for: 5m
+           annotations:
+             summary: The validator service is down
+  alertmanager:
+    receivers: []

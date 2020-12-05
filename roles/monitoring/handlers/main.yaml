@@ -5,6 +5,13 @@
     state: restarted
   become: true
 
+- name: Restart Alertmanager
+  systemd:
+    name: prometheus-alertmanager
+    daemon_reload: true
+    state: restarted
+  become: true
+
 - name: Restart Grafana
   command: snap restart grafana
   become: true

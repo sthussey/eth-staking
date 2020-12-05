@@ -6,7 +6,14 @@ After=syslog.target network.target
 User=lighthouse
 Group=lighthouse
 Environment=HOME=/home/lighthouse
-ExecStart=/usr/local/bin/lighthouse --network "{{ configuration.lighthouse.network | default('mainnet') }}" --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" bn {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} --metrics --metrics-address=0.0.0.0 --staking --eth1-endpoints {{ configuration.lighthouse.eth1_endpoints | join(',') }}
+ExecStart=/usr/local/bin/lighthouse \
+  --network "{{ configuration.lighthouse.network | default('mainnet') }}" \
+  --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" \
+  bn \
+  {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
+  --metrics --metrics-address=0.0.0.0 \
+  --staking --eth1-endpoints {{ configuration.lighthouse.beacon.eth1_endpoints | join(',') }} \
+  --target-peers {{ configuration.lighthouse.beacon.target_peers }}
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90

@@ -8,6 +8,59 @@
   become: true
   notify: Restart Prometheus
 
+- name: Configure Prometheus Alerts
+  template:
+    src: prometheus-alerts.yml.j2
+    dest: /etc/prometheus/alerts.yml
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: Restart Prometheus
+
+- name: Configure permissions on custom storage path
+  file:
+    path: "{{ configuration.prometheus.storage.path }}"
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+  become: true
+  when: configuration.prometheus.storage.path | default(False)
+
+- name: Customize Prometheus service
+  template:
+    src: prometheus.env.j2
+    dest: /etc/default/prometheus
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: configuration.prometheus.storage.path | default(False) or
+        configuration.prometheus.storage.retention | default(False)
+  notify: Restart Prometheus
+
+- name: Configure Alertmanager
+  template:
+    src: alertmanager.yml.j2
+    dest: /etc/prometheus/alertmanager.yml
+    owner: prometheus
+    group: root
+    mode: '0600'
+  become: true
+  when: configuration.alertmanager.receivers | default([]) | length > 0
+  notify: Restart Alertmanager
+
+- name: Customize Alertmanager service
+  template:
+    src: alertmanager.env.j2
+    dest: /etc/default/prometheus-alertmanager
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: configuration.prometheus.storage.path | default(False)
+  notify: Restart Alertmanager
+
 - name: Ensure grafana configuration directories exist
   file:
     path: /var/snap/grafana/common/{{ item }}
