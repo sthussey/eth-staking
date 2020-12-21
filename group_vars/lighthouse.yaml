@@ -1,6 +1,6 @@
 lighthouse:
-  checksum: sha256:c1cfa0a2eced07f572e36ca00a40bdf4c55c5a8db5c602709898fdd2bc7caa0b
-  version: v1.0.3
+  checksum: sha256:331e313d5deb798bb84dd6504836c6a595f9466e7c0700e1855906388705c1fd
+  version: v1.0.4
 
 configuration:
   lighthouse:
