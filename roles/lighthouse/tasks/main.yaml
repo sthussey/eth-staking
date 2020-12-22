@@ -72,6 +72,16 @@
     - "{{ configuration.lighthouse.datadir_base }}"
     - "{{ configuration.lighthouse.datadir_base }}/{{ configuration.lighthouse.network }}"
 
+- name: Set slasher_db data directory permissions
+  file:
+    path: "{{ configuration.lighthouse.slasher.datadir }}"
+    state: directory
+    owner: lighthouse
+    group: lighthouse
+    mode: '0750'
+  become: true
+  when: configuration.lighthouse.slasher.datadir
+
 - name: Configure beacon systemd unit
   template:
     src: beacon.service.j2
