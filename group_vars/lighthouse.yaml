@@ -14,7 +14,6 @@ configuration:
       target_peers: 50
     slasher:
       enabled: false
-      # defaults to datadir_base/network/beacon/slash_db
-      # datadir:
+      datadir: datadir_base/network/beacon/slash_db
       # this is in GB
       max_database_size: 256
