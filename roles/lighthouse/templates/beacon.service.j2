@@ -13,7 +13,17 @@ ExecStart=/usr/local/bin/lighthouse \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
   --metrics --metrics-address=0.0.0.0 \
   --staking --eth1-endpoints {{ configuration.lighthouse.beacon.eth1_endpoints | join(',') }} \
-  --target-peers {{ configuration.lighthouse.beacon.target_peers }}
+  --target-peers {{ configuration.lighthouse.beacon.target_peers }} \
+  --debug-level {{ configuration.lighthouse.log_level | default('info') }} \
+  {% if configuration.lighthouse.slasher.enabled | default(false) %}
+  --slasher --slasher-max-db-size {{ configuration.lighthouse.slasher.max_database_size }} \
+  {% if configuration.lighthouse.slasher.datadir | default("") != "" %}
+  --slasher-dir "{{ configuration.lighthouse.slasher.datadir }}" \
+  {% else %}
+  --slasher-dir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}/beacon/slasher_db" \
+  {% endif %}
+  {% endif %}
+
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90

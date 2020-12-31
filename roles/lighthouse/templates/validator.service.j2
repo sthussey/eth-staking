@@ -11,7 +11,8 @@ ExecStart=/usr/local/bin/lighthouse \
   --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" \
   vc \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
-  --metrics --metrics-address=0.0.0.0
+  --metrics --metrics-address=0.0.0.0 \
+  --debug-level {{ configuration.lighthouse.log_level | default('info') }}
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90

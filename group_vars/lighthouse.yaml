@@ -7,7 +7,14 @@ configuration:
     network: "mainnet"
     datadir_base: "/home/lighthouse/.lighthouse"
     graffiti: null
+    log_level: info
     beacon:
       eth1_endpoints:
         - http://localhost:8545
       target_peers: 50
+    slasher:
+      enabled: false
+      # defaults to datadir_base/network/beacon/slash_db
+      # datadir:
+      # this is in GB
+      max_database_size: 256
