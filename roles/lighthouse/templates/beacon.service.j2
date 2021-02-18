@@ -17,6 +17,9 @@ ExecStart=/usr/local/bin/lighthouse \
   --debug-level {{ configuration.lighthouse.log_level | default('info') }} \
   {% if configuration.lighthouse.slasher.enabled | default(false) %}
   --slasher --slasher-max-db-size {{ configuration.lighthouse.slasher.max_database_size }} \
+  {% if configuration.lighthouse.slasher.broadcast | default(false) %}
+  --slasher-broadcast \
+  {% endif %}
   {% if configuration.lighthouse.slasher.datadir | default("") != "" %}
   --slasher-dir "{{ configuration.lighthouse.slasher.datadir }}" \
   {% else %}
