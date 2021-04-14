@@ -6,7 +6,12 @@ After=syslog.target network.target
 User=geth
 Group=geth
 Environment=HOME=/home/geth
-ExecStart=/usr/bin/geth --http --ipcdisable --metrics --nousb --pprof --pprof.addr=0.0.0.0 --config {{ configuration.geth.path }}
+ExecStart=/usr/bin/geth --http \
+  --ipcdisable --metrics --nousb --pprof \
+  --pprof.addr=0.0.0.0 --config {{ configuration.geth.path }} \
+  --maxpeers {{ configuration.geth.eth.maxpeers }} \
+  {% if configuration.geth.snapshots.enabled %}--snapshot{% endif %}
+
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90

@@ -11,6 +11,8 @@ configuration:
     path: /etc/geth.toml
     eth:
       networkid: 1
+      maxpeers: 50
     node:
       datadir: /home/geth/.ethereum
-
+    snapshots:
+      enabled: true
