@@ -1,6 +1,6 @@
 lighthouse:
-  checksum: sha256:889302437b7092bec2d53506ac2b5078da3f7ff06f38845f26f4269608c429ad
-  version: v1.4.0
+  checksum: sha256:1859a9561115f67401376c8f62024cd0a5e004c3616e58effe8c61b0bbb9173d
+  version: v1.5.0
 
 configuration:
   lighthouse:
@@ -8,6 +8,8 @@ configuration:
     datadir_base: "/home/lighthouse/.lighthouse"
     graffiti: null
     log_level: info
+    validator:
+      enable_doppleganger_protection: true
     beacon:
       eth1_endpoints:
         - http://localhost:8545

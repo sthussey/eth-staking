@@ -12,6 +12,7 @@ ExecStart=/usr/local/bin/lighthouse \
   vc \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
   --metrics --metrics-address=0.0.0.0 \
+  {% if configuration.lighthouse.validator.enable_doppleganger_protection %} --enable-doppelganger-protection {% endif %} \
   --debug-level {{ configuration.lighthouse.log_level | default('info') }}
 KillMode=process
 KillSignal=SIGINT
