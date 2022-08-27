@@ -45,7 +45,7 @@ scrape_configs:
     metrics_path: /debug/metrics/prometheus
     static_configs:
       - targets:
-      {% for host in groups['eth1'] %}
+      {% for host in groups['execution'] %}
         - {{ host }}:6060
       {% endfor %}
 
