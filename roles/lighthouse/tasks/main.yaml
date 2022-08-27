@@ -1,3 +1,9 @@
+- name: Set beacon variables
+  ansible.builtin.set_fact:
+    execution_node_address: "127.0.0.1:{{ configuration.geth.network.authrpc.port }}"
+    beacon_jwt_path:  "{{ configuration.lighthouse.datadir_base }}/{{ configuration.lighthouse.network }}/.jwt"
+  when: "'beacon' in group_names"
+
 - name: Create lighthouse group
   ansible.builtin.group:
     name: lighthouse
@@ -103,11 +109,14 @@
 
 - name: Create AuthRPC JWT
   ansible.builtin.copy:
-    dest: "{{ configuration.lighthouse.beacon.execution_endpoint.jwtpath }}"
+    dest: "{{ beacon_jwt_path }}"
     owner: lighthouse
     group: lighthouse
     mode: "0400"
     content: "{{ authjwt }}"
+  become: true
+  notify: Restart beacon
+
 - name: Configure validator systemd unit
   ansible.builtin.template:
     src: validator.service.j2

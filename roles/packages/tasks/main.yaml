@@ -32,6 +32,7 @@
 
 - name: Install snaps
   become: true
-  ansible.builtin.shell: "snap install {{ item }}"
+  shell:
+    cmd: "snap install {{ item }}"
   changed_when: false
-  with_items: "{{ packages.snap.values() | flatten | sort | unique | default([]) }}"
+  loop: "{{ packages.snap.values() | flatten | sort | unique | default([]) }}"

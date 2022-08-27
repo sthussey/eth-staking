@@ -12,8 +12,8 @@ ExecStart=/usr/local/bin/lighthouse \
   bn \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
   --metrics --metrics-address=0.0.0.0 --staking \
-  --execution-endpoint {{ configuration.lighthouse.beacon.execution_endpoint.addr }} \
-  --execution-jwt {{ configuration.lighthouse.beacon.execution_endpoint.jwtpath }} \
+  --execution-endpoint http://{{ execution_node_address }} \
+  --execution-jwt {{ beacon_jwt_path }} \
   --target-peers {{ configuration.lighthouse.beacon.target_peers }} \
   --debug-level {{ configuration.lighthouse.log_level | default('info') }} \
   {% if configuration.lighthouse.slasher.enabled | default(false) %}

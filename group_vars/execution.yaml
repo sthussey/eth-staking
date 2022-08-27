@@ -20,6 +20,5 @@ configuration:
         port: 8551
     node:
       datadir: /home/geth/.ethereum
-      jwtpath: "{{ configuration.geth.node.datadir }}/geth/jwtsecret"
     snapshots:
       enabled: true

@@ -1,3 +1,7 @@
+- name: Set execution variables
+  ansible.builtin.set_fact:
+    execution_jwt_path: "{{ configuration.geth.node.datadir }}/geth/.jwt"
+
 - name: Create geth group
   ansible.builtin.group:
     name: geth
@@ -40,11 +44,13 @@
 
 - name: Create authrpc JWT file
   ansible.builtin.copy:
-    dest: "{{ configuration.geth.node.jwtpath }}"
+    dest: "{{ execution_jwt_path }}"
     owner: geth
     group: geth
     mode: '0400'
     content: "{{ authjwt }}"
+  become: true
+  notify: Restart geth
 
 - name: Configure systemd unit
   ansible.builtin.template:

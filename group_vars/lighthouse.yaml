@@ -11,9 +11,6 @@ configuration:
     validator:
       enable_doppleganger_protection: true
     beacon:
-      execution_endpoint:
-        addr: "127.0.0.1:{{ configuration.geth.network.authrpc.port }}"
-        jwtpath: "{{ configuration.lighthouse.datadir_base }}/{{ configuration.lighthouse.network }}/.jwt"
       target_peers: 50
     slasher:
       enabled: false
