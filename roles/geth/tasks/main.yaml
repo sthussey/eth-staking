@@ -1,18 +1,18 @@
 - name: Create geth group
-  group:
+  ansible.builtin.group:
     name: geth
     state: present
   become: true
 
 - name: Create geth user
-  user:
+  ansible.builtin.user:
     name: geth
     groups: geth
     shell: /usr/sbin/nologin
   become: true
 
 - name: Restrict geth home directory permissions
-  file:
+  ansible.builtin.file:
     path: /home/geth
     state: directory
     owner: geth
@@ -21,7 +21,7 @@
   become: true
 
 - name: Configure geth
-  template:
+  ansible.builtin.template:
     src: geth.toml.j2
     dest:  "{{ configuration.geth.path }}"
     owner: geth
@@ -30,7 +30,7 @@
   become: true
 
 - name: Set data directory permissions
-  file:
+  ansible.builtin.file:
     path: "{{ configuration.geth.node.datadir }}"
     state: directory
     owner: geth
@@ -38,8 +38,16 @@
     mode: '0750'
   become: true
 
+- name: Create authrpc JWT file
+  ansible.builtin.copy:
+    dest: "{{ configuration.geth.node.jwtpath }}"
+    owner: geth
+    group: geth
+    mode: '0400'
+    content: "{{ authjwt }}"
+
 - name: Configure systemd unit
-  template:
+  ansible.builtin.template:
     src: geth.service.j2
     dest: /etc/systemd/system/geth.service
     owner: root
@@ -49,7 +57,7 @@
   notify: Restart geth
 
 - name: Enable geth service
-  systemd:
+  ansible.builtin.systemd:
     name: geth
     state: started
     enabled: true

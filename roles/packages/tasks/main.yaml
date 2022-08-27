@@ -1,25 +1,31 @@
-
 - name: Upgrade all packages
   become: true
-  apt:
+  ansible.builtin.apt:
     name: "*"
     state: latest
     force_apt_get: true
 
 - name: Install apt repositories
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ item }}"
   with_items: "{{ packages.apt_repositories.values() | flatten | sort | unique | default([]) }}"
 
 - name: Install packages
   become: true
-  apt:
+  ansible.builtin.apt:
     name: "{{ packages.apt.values() | flatten | sort | unique | default([]) }}"
     state: present
 
+- name: Freeze select packages
+  become: true
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items: "{{ packages.apt_hold | flatten | default([]) }}"
+
 - name: Install snaps
   become: true
-  shell: "snap install {{ item }}"
+  ansible.builtin.shell: "snap install {{ item }}"
   changed_when: false
   with_items: "{{ packages.snap.values() | flatten | sort | unique | default([]) }}"

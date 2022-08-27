@@ -1,0 +1,3 @@
+- name: Generate Authentication Token
+  set_fact:
+    authjwt: "{{ configuration.geth.network.authrpc.token | default(lookup('community.general.random_string', base64=yes, length=24)) }}"

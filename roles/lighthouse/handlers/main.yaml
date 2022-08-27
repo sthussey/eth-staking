@@ -1,12 +1,12 @@
 - name: Restart beacon
-  systemd:
+  ansible.builtin.systemd:
     name: beacon
     daemon_reload: true
     state: restarted
   become: true
 
 - name: Restart validator
-  systemd:
+  ansible.builtin.systemd:
     name: validator
     daemon_reload: true
     state: restarted
