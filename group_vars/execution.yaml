@@ -4,7 +4,7 @@ packages:
       - ppa:ethereum/ethereum
   apt:
     beacon:
-      - ethereum>=1.10.23
+      - ethereum=1.10.23+*
   apt_hold:
     beacon:
       - ethereum
@@ -20,6 +20,6 @@ configuration:
         port: 8551
     node:
       datadir: /home/geth/.ethereum
-      jwtpath: {{ configuration.geth.node.datadir }}/geth/jwtsecret
+      jwtpath: "{{ configuration.geth.node.datadir }}/geth/jwtsecret"
     snapshots:
       enabled: true
