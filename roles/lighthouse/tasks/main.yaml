@@ -1,18 +1,24 @@
+- name: Set beacon variables
+  ansible.builtin.set_fact:
+    execution_node_address: "127.0.0.1:{{ configuration.geth.network.authrpc.port }}"
+    beacon_jwt_path:  "{{ configuration.lighthouse.datadir_base }}/{{ configuration.lighthouse.network }}/.jwt"
+  when: "'beacon' in group_names"
+
 - name: Create lighthouse group
-  group:
+  ansible.builtin.group:
     name: lighthouse
     state: present
   become: true
 
 - name: Create lighthouse user
-  user:
+  ansible.builtin.user:
     name: lighthouse
     groups: lighthouse
     shell: /usr/sbin/nologin
   become: true
 
 - name: Restrict lighthouse home directory permissions
-  file:
+  ansible.builtin.file:
     path: /home/lighthouse
     state: directory
     owner: lighthouse
@@ -21,7 +27,7 @@
   become: true
 
 - name: Create downloads directory
-  file:
+  ansible.builtin.file:
     path: /home/lighthouse/downloads
     state: directory
     owner: lighthouse
@@ -30,7 +36,7 @@
   become: true
 
 - name: Download lighthouse
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/sigp/lighthouse/releases/download/{{ lighthouse.version }}/lighthouse-{{ lighthouse.version }}-x86_64-unknown-linux-gnu.tar.gz"
     dest: /home/lighthouse/downloads/lighthouse-{{ lighthouse.version }}.tgz
     checksum: "{{ lighthouse.checksum }}"
@@ -41,7 +47,7 @@
   become: true
 
 - name: Extract lighthouse binary
-  unarchive:
+  ansible.builtin.unarchive:
     src: /home/lighthouse/downloads/lighthouse-{{ lighthouse.version }}.tgz
     dest: /usr/local/bin
     remote_src: true
@@ -52,7 +58,7 @@
     - Restart validator
 
 - name: Ensure correct binary permissions
-  file:
+  ansible.builtin.file:
     path: /usr/local/bin/lighthouse
     state: file
     owner: root
@@ -61,7 +67,7 @@
   become: true
 
 - name: Set data directory permissions
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: lighthouse
@@ -73,7 +79,7 @@
     - "{{ configuration.lighthouse.datadir_base }}/{{ configuration.lighthouse.network }}"
 
 - name: Set slasher_db data directory permissions
-  file:
+  ansible.builtin.file:
     path: "{{ configuration.lighthouse.slasher.datadir }}"
     state: directory
     owner: lighthouse
@@ -83,7 +89,7 @@
   when: configuration.lighthouse.slasher.datadir
 
 - name: Configure beacon systemd unit
-  template:
+  ansible.builtin.template:
     src: beacon.service.j2
     dest: /etc/systemd/system/beacon.service
     owner: root
@@ -94,15 +100,25 @@
   notify: Restart beacon
 
 - name: Enable beacon service
-  systemd:
+  ansible.builtin.systemd:
     name: beacon
     state: started
     enabled: true
   when: "'beacon' in group_names"
   become: true
 
+- name: Create AuthRPC JWT
+  ansible.builtin.copy:
+    dest: "{{ beacon_jwt_path }}"
+    owner: lighthouse
+    group: lighthouse
+    mode: "0400"
+    content: "{{ authjwt }}"
+  become: true
+  notify: Restart beacon
+
 - name: Configure validator systemd unit
-  template:
+  ansible.builtin.template:
     src: validator.service.j2
     dest: /etc/systemd/system/validator.service
     owner: root
@@ -113,7 +129,7 @@
   notify: Restart validator
 
 - name: Enable validator service
-  systemd:
+  ansible.builtin.systemd:
     name: validator
     state: started
     enabled: true

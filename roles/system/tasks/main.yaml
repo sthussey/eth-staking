@@ -1,0 +1,6 @@
+- name: Generate Authentication Token
+  ansible.builtin.set_fact:
+    authjwt: "{{ configuration.geth.network.authrpc.token | default(lookup('community.general.random_string', override_all=hex_chars, length=32)) }}"
+  vars:
+    hex_chars: '0123456789ABCDEF'
+

@@ -1,6 +1,6 @@
 lighthouse:
-  checksum: sha256:d459eb81f40a125dd92ff95f96ad642b4f4b1f65168844022d7e19b486e1cfc1
-  version: v2.3.1
+  checksum: sha256:23e898614d370f16144f5f3c8f3d3e387fed10caa17bad2bb24395d76f18cbc9
+  version: v3.0.0
 
 configuration:
   lighthouse:
@@ -11,8 +11,6 @@ configuration:
     validator:
       enable_doppleganger_protection: true
     beacon:
-      eth1_endpoints:
-        - http://localhost:8545
       target_peers: 50
     slasher:
       enabled: false

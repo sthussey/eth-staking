@@ -10,6 +10,8 @@ ExecStart=/usr/bin/geth --http \
   --ipcdisable --metrics --nousb --pprof \
   --pprof.addr=0.0.0.0 --config {{ configuration.geth.path }} \
   --maxpeers {{ configuration.geth.eth.maxpeers }} \
+  --authrpc.jwtsecret {{ execution_jwt_path }} \
+  --authrpc.port {{ configuration.geth.network.authrpc.port }} \
   {% if configuration.geth.snapshots.enabled %}--snapshot{% endif %}
 
 KillMode=process

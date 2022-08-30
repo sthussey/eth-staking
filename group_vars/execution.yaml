@@ -4,6 +4,9 @@ packages:
       - ppa:ethereum/ethereum
   apt:
     beacon:
+      - ethereum=1.10.23+*
+  apt_hold:
+    beacon:
       - ethereum
 
 configuration:
@@ -12,6 +15,9 @@ configuration:
     eth:
       networkid: 1
       maxpeers: 50
+    network:
+      authrpc:
+        port: 8551
     node:
       datadir: /home/geth/.ethereum
     snapshots:
