@@ -1,0 +1,6 @@
+- name: Restart mevboost
+  ansible.builtin.systemd:
+    name: mevboost
+    daemon_reload: true
+    state: restarted
+  become: true

@@ -11,6 +11,7 @@ ExecStart=/usr/local/bin/lighthouse \
   --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" \
   bn \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
+  {% if ( mevboost.enable | default(false) ) %} --builder https://127.0.0.1:18550 {% endif %} \
   --metrics --metrics-address=0.0.0.0 --staking \
   --execution-endpoint http://{{ execution_node_address }} \
   --execution-jwt {{ beacon_jwt_path }} \

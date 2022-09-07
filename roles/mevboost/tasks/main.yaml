@@ -1,0 +1,83 @@
+- name: Create mevboost group
+  ansible.builtin.group:
+    name: mevboost
+    state: present
+  become: true
+
+- name: Create mevboost user
+  ansible.builtin.user:
+    name: mevboost
+    groups: mevboost
+    shell: /usr/sbin/nologin
+  become: true
+
+- name: Restrict mevboost home directory permissions
+  ansible.builtin.file:
+    path: /home/mevboost
+    state: directory
+    owner: mevboost
+    group: mevboost
+    mode: '0750'
+  become: true
+
+# This will require local installations of Go 1.18+ and support cGo
+- name: Install mev-boost via Go
+  when: mevboost.method == "go-install"
+  block:
+    - name: Install mev-boost
+      ansible.builtin.command:
+        argv:
+          - go
+          - install
+          - github.com/flashbots/mev-boost@{{ mevboost.version }}
+      notify: Restart mevboost
+
+    - name: Get GOBIN value
+      ansible.builtin.command:
+        argv:
+          - go
+          - env
+          - GOBIN
+      register: gobin
+
+    - name: Get GOPATH value
+      ansible.builtin.command:
+        argv:
+          - go
+          - env
+          - GOPATH
+      register: gopath
+
+    - name: Set install home
+      ansible.builtin.set_fact:
+        mevboost_bindir: "{{ gobin.stdout | default((gopath.stdout | trim) ~ '/bin', true) }}"
+
+    - name: Create directory for mev-boost binary
+      ansible.builtin.file:
+        path: /home/mevboost/bin
+        state: directory
+        owner: mevboost
+        group: mevboost
+        mode: '0750'
+      become: true
+
+    - name: Copy mev-boost binary
+      ansible.builtin.copy:
+        src: "{{ mevboost_bindir }}/mev-boost"
+        dest: "/home/mevboost/bin/mev-boost"
+        owner: mevboost
+        group: mevboost
+        mode: '0700'
+      become: true
+
+    - name: Configure mevboost systemd unit
+      ansible.builtin.template:
+        src: mevboost.service.j2
+        dest: /etc/systemd/system/mevboost.service
+        owner: root
+        group: root
+        mode: '0664'
+      become: true
+      when: "'mevrelay' in group_names"
+      notify: Restart mevboost
+

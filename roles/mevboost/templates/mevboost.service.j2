@@ -1,0 +1,19 @@
+[Unit]
+Description=MEV-Boost
+After=syslog.target network.target
+
+[Service]
+User=mevboost
+Group=mevboost
+Environment=HOME=/home/mevboost
+ExecStart=/home/mevboost/bin/mev-boost \
+  -mainnet -relay-check \
+  -relays {{ mevboost.relays |  join(",") }}
+KillMode=process
+KillSignal=SIGINT
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

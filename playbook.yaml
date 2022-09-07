@@ -2,9 +2,16 @@
   roles:
     - packages
     - system
-- hosts: beacon
+- hosts: mevrelay
+  roles:
+    - role: mevboost
+      when: ( mevboost.enable | default(false) ) == true
+- hosts: execution
   roles:
     - geth
+- hosts: beacon
+  roles:
+    - lighthouse
 - hosts: validator
   roles:
     - lighthouse
