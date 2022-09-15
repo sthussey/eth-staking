@@ -23,13 +23,6 @@
     name: "{{ packages.apt.values() | flatten | sort | unique | default([]) }}"
     state: present
 
-- name: Freeze select packages
-  become: true
-  ansible.builtin.dpkg_selections:
-    name: "{{ item }}"
-    selection: hold
-  with_items: "{{ packages.apt_hold | flatten | default([]) }}"
-
 - name: Install snaps
   become: true
   shell:

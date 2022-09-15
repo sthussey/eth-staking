@@ -4,9 +4,6 @@ packages:
       - ppa:ethereum/ethereum
   apt:
     beacon:
-      - ethereum=1.10.23+*
-  apt_hold:
-    beacon:
       - ethereum
 
 configuration:
