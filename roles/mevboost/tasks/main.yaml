@@ -78,6 +78,6 @@
         group: root
         mode: '0664'
       become: true
-      when: "'mevrelay' in group_names"
+      when: "'mevbroker' in group_names"
       notify: Restart mevboost
 

@@ -2,7 +2,7 @@
   roles:
     - packages
     - system
-- hosts: mevrelay
+- hosts: mevbroker
   roles:
     - role: mevboost
       when: ( mevboost.enable | default(false) ) == true
