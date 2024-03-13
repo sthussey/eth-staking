@@ -1,0 +1,6 @@
+rocketpool:
+  version: "v1.7.0"
+configuration:
+  rocketpool:
+    validator_user: lighthouse
+    basedir: "/srv/rocketpool"

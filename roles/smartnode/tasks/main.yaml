@@ -1,0 +1,211 @@
+- name: Create Rocketpool group
+  ansible.builtin.group:
+    name: rp
+    state: present
+  become: true
+
+- name: Create Rocketpool user
+  ansible.builtin.user:
+    name: rp
+    state: present
+    shell: /usr/sbin/nologin
+    group: rp
+    create_home: true
+    umask: '0002'
+  become: true
+  register: rp_user
+
+- name: Add validator user to Rocketpool group
+  ansible.builtin.user:
+    name: "{{ configuration.rocketpool.validator_user }}"
+    append: true
+    groups: ["rp"]
+  become: true
+
+- name: Restrict Rocketpool home directory
+  ansible.builtin.file:
+    path: "{{ rp_user.home }}"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0750'
+  become: true
+
+- name: Create Rocketpool downloads directory
+  ansible.builtin.tempfile:
+    state: directory
+  register: rp_dl_repo
+
+- name: Download Rocketpool CLI
+  ansible.builtin.get_url:
+    url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/rocketpool-cli-linux-amd64"
+    dest: "{{rp_dl_repo.path}}/rocketpool-cli"
+
+- name: Download Rocketpool daemon
+  ansible.builtin.get_url:
+    url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/rocketpool-daemon-linux-amd64"
+    dest: "{{rp_dl_repo.path}}/rocketpoold"
+
+- name: Create install base location
+  ansible.builtin.file:
+    path: "{{ configuration.rocketpool.basedir }}"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0770'
+  become: true
+  register: rp_basedir
+
+- name: Create install binary location
+  ansible.builtin.file:
+    path: "{{ configuration.rocketpool.bindir | default(rp_basedir.path + '/bin') }}"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0750'
+  become: true
+  register: rp_bindir
+
+- name: Create install data location
+  ansible.builtin.file:
+    path: "{{ configuration.rocketpool.datadir | default(rp_basedir.path + '/data') }}"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0770'
+  become: true
+  register: rp_datadir
+
+- name: Install Rocketpool CLI
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{rp_dl_repo.path}}/rocketpool-cli"
+    dest: "/usr/local/bin/rocketpool"
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+- name: Install Rocketpool Daemon
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{rp_dl_repo.path}}/rocketpoold"
+    dest: "{{ rp_bindir.path }}/rocketpoold"
+    owner: rp
+    group: rp
+    mode: '0550'
+  become: true
+
+- name: Create data directory structure
+  ansible.builtin.file:
+    path: "{{ rp_datadir.path}}/{{ item }}"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0770'
+  become: true
+  loop:
+    - "rewards-trees"
+    - "custom-keys"
+
+- name: Create validators directory
+  ansible.builtin.file:
+    path: "{{ rp_datadir.path}}/validators"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0775'
+  become: true
+  register: rp_validatordir
+
+- name: Create validators directory structure
+  ansible.builtin.file:
+    path: "{{ rp_validatordir.path }}/{{ item }}"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0775'
+  become: true
+  loop:
+    - "lighthouse"
+    - "lighthouse/validators"
+    - "lighthouse/secrets"
+
+- name: Create validators secrets directory
+  ansible.builtin.file:
+    path: "{{ rp_validatordir.path }}/secrets"
+    state: directory
+    owner: rp
+    group: rp
+    mode: '0775'
+  become: true
+
+- name: Install control scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ rp_bindir.path }}/{{ item }}"
+    owner: rp
+    group: rp
+    mode: '0500'
+  become: true
+  loop:
+    - "restart-vc.sh"
+    - "stop-validator.sh"
+
+- name: Give rocketpool access to validator service
+  community.general.sudoers:
+    commands:
+      - "/bin/systemctl start rp-validator"
+      - "/bin/systemctl stop rp-validator"
+    name: "rocketpool"
+    nopassword: true
+    runas: "root"
+    state: "present"
+    user: "rp"
+  become: true
+
+- name: Install rocketpoold configuration
+  ansible.builtin.template:
+    src: user-settings.yml.j2
+    dest: "{{ rp_basedir.path }}/user-settings.yml"
+    owner: rp
+    group: rp
+    mode: '0660'
+  become: true
+  notify: Restart rocketpool
+
+- name: Configure Rocketpool validator systemd unit
+  ansible.builtin.template:
+    src: validator.service.j2
+    dest: /etc/systemd/system/rp-validator.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+  notify: Restart validator
+
+
+- name: Configure Rocketpool systemd unit
+  ansible.builtin.template:
+    src: rocketpoold.service.j2
+    dest: /etc/systemd/system/rocketpoold.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+  notify: Restart rocketpool
+
+- name: Enable rocketpool service
+  ansible.builtin.systemd:
+    name: rocketpoold
+    state: started
+    enabled: true
+  become: true
+
+- name: Enable validator service
+  ansible.builtin.systemd:
+    name: rp-validator
+    state: started
+    enabled: true
+  become: true
+

@@ -1,0 +1,25 @@
+
+[Unit]
+Description=Rocketpool Lighthouse
+After=syslog.target network.target
+
+[Service]
+User=lighthouse
+Group=rp
+EnvironmentFile={{ rp_validatordir.path }}/rp-fee-recipient-env.txt
+Environment=HOME=/home/lighthouse
+ExecStart=/usr/local/bin/lighthouse \
+  --network "{{ configuration.lighthouse.network | default('mainnet') }}" \
+  --datadir "{{ rp_validatordir.path }}/lighthouse" \
+  vc \
+  --enable-doppelganger-protection \
+  --debug-level {{ configuration.lighthouse.log_level | default('info') }} \
+  --suggested-fee-recipient ${FEE_RECIPIENT}
+KillMode=process
+KillSignal=SIGINT
+TimeoutStopSec=90
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

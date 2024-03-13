@@ -1,0 +1,13 @@
+[Unit]
+Description=rp-node
+After=network.target
+
+[Service]
+Type=simple
+User=rp
+Restart=always
+RestartSec=5
+ExecStart={{ rp_bindir.path }}/rocketpoold --settings {{ rp_basedir.path }}/user-settings.yml node
+
+[Install]
+WantedBy=multi-user.target

@@ -29,7 +29,7 @@
         argv:
           - go
           - install
-          - github.com/flashbots/mev-boost@{{ mevboost.version }}
+          - github.com/flashbots/mev-boost@{{ mevboost.version | default('latest') }}
       notify: Restart mevboost
 
     - name: Get GOBIN value
@@ -70,14 +70,22 @@
         mode: '0700'
       become: true
 
-    - name: Configure mevboost systemd unit
-      ansible.builtin.template:
-        src: mevboost.service.j2
-        dest: /etc/systemd/system/mevboost.service
-        owner: root
-        group: root
-        mode: '0664'
-      become: true
-      when: "'mevbroker' in group_names"
-      notify: Restart mevboost
+- name: Configure mevboost systemd unit
+  ansible.builtin.template:
+    src: mevboost.service.j2
+    dest: /etc/systemd/system/mevboost.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+  when: "'mevbroker' in group_names and (mevboost.method == 'go-install' or mevboost.method == 'binary')"
+  notify: Restart mevboost
 
+- name: Enable mevboost systemd unit
+  ansible.builtin.systemd:
+    name: mevboost
+    daemon_reload: true
+    state: started
+    enabled: true
+    masked: false
+  become: true

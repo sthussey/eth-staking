@@ -1,0 +1,13 @@
+- name: Restart validator
+  ansible.builtin.systemd:
+    name: rp-validator
+    daemon_reload: true
+    state: restarted
+  become: true
+
+- name: Restart rocketpool
+  ansible.builtin.systemd:
+    name: rocketpoold
+    daemon_reload: true
+    state: restarted
+  become: true

@@ -1,7 +1,5 @@
 lighthouse:
-  checksum: sha256:71c750f3e3f42a2b256d399cae2df935ef2c69665121b72f2d3b6ebb4fb55f1f
-  version: v3.1.0
-
+  version: v5.0.0
 configuration:
   lighthouse:
     network: "mainnet"
@@ -9,12 +7,14 @@ configuration:
     graffiti: null
     log_level: info
     validator:
+      datasubdir: validator
       enable_doppleganger_protection: true
     beacon:
+      datasubdir: beacon
       target_peers: 50
     slasher:
       enabled: false
       broadcast: false
-      datadir: datadir_base/network/beacon/slash_db
+      datasubdir: slasher
       # this is in GB
       max_database_size: 256

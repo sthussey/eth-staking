@@ -8,7 +8,7 @@ Group=lighthouse
 Environment=HOME=/home/lighthouse
 ExecStart=/usr/local/bin/lighthouse \
   --network "{{ configuration.lighthouse.network | default('mainnet') }}" \
-  --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.network | default('mainnet') }}" \
+  --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.validator.datasubdir }}/{{ configuration.lighthouse.network | default('mainnet') }}" \
   vc \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
   {% if ( mevboost.enable | default(false) ) %} --builder-proposals {% endif %} \

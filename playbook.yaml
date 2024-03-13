@@ -15,6 +15,9 @@
 - hosts: validator
   roles:
     - lighthouse
+- hosts: smartnode
+  roles:
+    - smartnode
 - hosts: monitoring
   roles:
     - monitoring
