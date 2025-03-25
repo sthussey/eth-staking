@@ -20,6 +20,47 @@
     mode: '0750'
   become: true
 
+- name: Create directory for mev-boost binary
+  ansible.builtin.file:
+        path: /home/mevboost/bin
+        state: directory
+        owner: mevboost
+        group: mevboost
+        mode: '0750'
+  become: true
+
+- name: Install mev-boost via GH artifact
+  when: mevboost.method == "gh-artifact"
+  block:
+    - name: Download mevboost GH artifact
+      ansible.builtin.get_url:
+        url: https://github.com/flashbots/mev-boost/releases/download/v{{ mevboost.version }}/mev-boost_{{ mevboost.version }}_linux_amd64.tar.gz 
+        dest: /home/mevboost/mevboost-{{ mevboost.version }}.tgz
+        owner: mevboost
+        group: mevboost
+        mode: '0644'
+      register: mevboost_download 
+      become: true
+
+    - name: Extract mevboost binary
+      ansible.builtin.unarchive:
+        src: /home/mevboost/mevboost-{{ mevboost.version }}.tgz
+        dest: /home/mevboost/bin/
+        remote_src: true
+      when: mevboost_download.changed
+      become: true
+      notify:
+        - Restart mevboost
+
+    - name: Ensure correct mevboost binary permissions
+      ansible.builtin.file:
+        path: /home/mevboost/bin/mev-boost
+        state: file
+        owner: mevboost
+        group: mevboost
+        mode: '0700'
+      become: true
+
 # This will require local installations of Go 1.18+ and support cGo
 - name: Install mev-boost via Go
   when: mevboost.method == "go-install"
@@ -52,14 +93,6 @@
       ansible.builtin.set_fact:
         mevboost_bindir: "{{ gobin.stdout | default((gopath.stdout | trim) ~ '/bin', true) }}"
 
-    - name: Create directory for mev-boost binary
-      ansible.builtin.file:
-        path: /home/mevboost/bin
-        state: directory
-        owner: mevboost
-        group: mevboost
-        mode: '0750'
-      become: true
 
     - name: Copy mev-boost binary
       ansible.builtin.copy:

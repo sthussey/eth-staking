@@ -11,7 +11,7 @@ ExecStart=/usr/local/bin/lighthouse \
   --datadir "{{ configuration.lighthouse.datadir_base | default('/home/lighthouse/.lighthouse/') }}/{{ configuration.lighthouse.validator.datasubdir }}/{{ configuration.lighthouse.network | default('mainnet') }}" \
   vc \
   {% if configuration.lighthouse.graffiti %} --graffiti "{{ configuration.lighthouse.graffiti }}" {% endif %} \
-  {% if ( mevboost.enable | default(false) ) %} --builder-proposals {% endif %} \
+  {% if ( mevboost.enable | default(false) ) %} --builder-boost-factor {{ mevboost.builder_boost_factor }} --builder-proposals {% endif %} \
   --metrics --metrics-address=0.0.0.0 \
   {% if configuration.lighthouse.validator.enable_doppleganger_protection %} --enable-doppelganger-protection {% endif %} \
   --debug-level {{ configuration.lighthouse.log_level | default('info') }}

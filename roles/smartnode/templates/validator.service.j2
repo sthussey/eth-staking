@@ -12,6 +12,7 @@ ExecStart=/usr/local/bin/lighthouse \
   --network "{{ configuration.lighthouse.network | default('mainnet') }}" \
   --datadir "{{ rp_validatordir.path }}/lighthouse" \
   vc \
+  {% if ( mevboost.enable | default(true) ) %} --builder-boost-factor {{ mevboost.builder_boost_factor }}{% endif %} \
   --enable-doppelganger-protection \
   --debug-level {{ configuration.lighthouse.log_level | default('info') }} \
   --suggested-fee-recipient ${FEE_RECIPIENT}

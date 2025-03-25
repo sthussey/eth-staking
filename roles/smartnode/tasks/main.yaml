@@ -156,6 +156,7 @@
   community.general.sudoers:
     commands:
       - "/bin/systemctl start rp-validator"
+      - "/bin/systemctl restart rp-validator"
       - "/bin/systemctl stop rp-validator"
     name: "rocketpool"
     nopassword: true
@@ -163,16 +164,6 @@
     state: "present"
     user: "rp"
   become: true
-
-- name: Install rocketpoold configuration
-  ansible.builtin.template:
-    src: user-settings.yml.j2
-    dest: "{{ rp_basedir.path }}/user-settings.yml"
-    owner: rp
-    group: rp
-    mode: '0660'
-  become: true
-  notify: Restart rocketpool
 
 - name: Configure Rocketpool validator systemd unit
   ansible.builtin.template:
@@ -195,9 +186,26 @@
   become: true
   notify: Restart rocketpool
 
+- name: Configure Rocketpool systemd unit
+  ansible.builtin.template:
+    src: watchtower.service.j2
+    dest: /etc/systemd/system/watchtower.service
+    owner: root
+    group: root
+    mode: '0664'
+  become: true
+  notify: Restart watchtower
+
 - name: Enable rocketpool service
   ansible.builtin.systemd:
     name: rocketpoold
+    state: started
+    enabled: true
+  become: true
+
+- name: Enable watchtower service
+  ansible.builtin.systemd:
+    name: watchtower
     state: started
     enabled: true
   become: true

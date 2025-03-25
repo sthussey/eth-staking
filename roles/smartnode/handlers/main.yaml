@@ -11,3 +11,10 @@
     daemon_reload: true
     state: restarted
   become: true
+
+- name: Restart watchtower
+  ansible.builtin.systemd:
+    name: watchtower
+    daemon_reload: true
+    state: restarted
+  become: true

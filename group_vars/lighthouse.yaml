@@ -1,5 +1,5 @@
 lighthouse:
-  version: v5.0.0
+  version: v6.0.1
 configuration:
   lighthouse:
     network: "mainnet"
@@ -12,6 +12,7 @@ configuration:
     beacon:
       datasubdir: beacon
       target_peers: 50
+      builder_timeout_ms: 1000
     slasher:
       enabled: false
       broadcast: false

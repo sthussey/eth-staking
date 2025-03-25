@@ -8,7 +8,7 @@ User=rp
 UMask=0002
 Restart=always
 RestartSec=5
-ExecStart={{ rp_bindir.path }}/rocketpoold --settings {{ rp_basedir.path }}/user-settings.yml node
+ExecStart={{ rp_bindir.path }}/rocketpoold --settings {{ rp_basedir.path }}/user-settings.yml watchtower
 
 [Install]
 WantedBy=multi-user.target

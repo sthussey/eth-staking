@@ -1,5 +1,5 @@
 rocketpool:
-  version: "v1.7.0"
+  version: "v1.15.3"
 configuration:
   rocketpool:
     validator_user: lighthouse
