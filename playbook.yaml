@@ -5,7 +5,7 @@
 - hosts: mevbroker
   roles:
     - role: mevboost
-      when: ( mevboost.enable | default(false) ) == true
+      when: ( configuration.mevboost.enable | default(false) ) == true
 - hosts: execution
   roles:
     - geth

@@ -8,8 +8,8 @@ Group=mevboost
 Environment=HOME=/home/mevboost
 ExecStart=/home/mevboost/bin/mev-boost \
   -mainnet -relay-check \
-  -relays {{ mevboost.relays |  join(",") }} \
-  -relay-check {% if mevboost.min_bid > 0 %} -min-bid {{ mevboost.min_bid }} {% endif %}
+  -relays {{ configuration.mevboost.relays |  join(",") }} \
+  -relay-check {% if configuration.mevboost.min_bid > 0 %} -min-bid {{ configuration.mevboost.min_bid }} {% endif %}
 KillMode=process
 KillSignal=SIGINT
 TimeoutStopSec=90

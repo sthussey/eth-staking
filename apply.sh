@@ -2,4 +2,4 @@
 
 set -eu
 
-ansible-playbook -i inventory.ini --ask-become-pass playbook.yaml
+ansible-playbook -i /etc/ansible/hosts --ask-become-pass playbook.yaml

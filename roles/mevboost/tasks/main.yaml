@@ -29,22 +29,23 @@
         mode: '0750'
   become: true
 
+
 - name: Install mev-boost via GH artifact
-  when: mevboost.method == "gh-artifact"
+  when: configuration.mevboost.method == "gh-artifact"
   block:
     - name: Download mevboost GH artifact
       ansible.builtin.get_url:
-        url: https://github.com/flashbots/mev-boost/releases/download/v{{ mevboost.version }}/mev-boost_{{ mevboost.version }}_linux_amd64.tar.gz 
-        dest: /home/mevboost/mevboost-{{ mevboost.version }}.tgz
+        url: https://github.com/flashbots/mev-boost/releases/download/v{{ configuration.mevboost.version }}/mev-boost_{{ configuration.mevboost.version }}_linux_amd64.tar.gz
+        dest: /home/mevboost/mevboost-{{ configuration.mevboost.version }}.tgz
         owner: mevboost
         group: mevboost
         mode: '0644'
-      register: mevboost_download 
+      register: mevboost_download
       become: true
 
     - name: Extract mevboost binary
       ansible.builtin.unarchive:
-        src: /home/mevboost/mevboost-{{ mevboost.version }}.tgz
+        src: /home/mevboost/mevboost-{{ configuration.mevboost.version }}.tgz
         dest: /home/mevboost/bin/
         remote_src: true
       when: mevboost_download.changed
@@ -63,14 +64,14 @@
 
 # This will require local installations of Go 1.18+ and support cGo
 - name: Install mev-boost via Go
-  when: mevboost.method == "go-install"
+  when: configuration.mevboost.method == "go-install"
   block:
     - name: Install mev-boost
       ansible.builtin.command:
         argv:
           - go
           - install
-          - github.com/flashbots/mev-boost@{{ mevboost.version | default('latest') }}
+          - github.com/flashbots/mev-boost@{{ configuration.mevboost.version | default('latest') }}
       notify: Restart mevboost
 
     - name: Get GOBIN value
@@ -80,7 +81,6 @@
           - env
           - GOBIN
       register: gobin
-
     - name: Get GOPATH value
       ansible.builtin.command:
         argv:
@@ -88,12 +88,9 @@
           - env
           - GOPATH
       register: gopath
-
     - name: Set install home
       ansible.builtin.set_fact:
         mevboost_bindir: "{{ gobin.stdout | default((gopath.stdout | trim) ~ '/bin', true) }}"
-
-
     - name: Copy mev-boost binary
       ansible.builtin.copy:
         src: "{{ mevboost_bindir }}/mev-boost"
@@ -111,7 +108,6 @@
     group: root
     mode: '0664'
   become: true
-  when: "'mevbroker' in group_names and (mevboost.method == 'go-install' or mevboost.method == 'binary')"
   notify: Restart mevboost
 
 - name: Enable mevboost systemd unit
@@ -122,3 +118,4 @@
     enabled: true
     masked: false
   become: true
+
