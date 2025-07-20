@@ -1,5 +1,5 @@
 lighthouse:
-  version: v6.0.1
+  version: v7.1.0
 configuration:
   lighthouse:
     network: "mainnet"
