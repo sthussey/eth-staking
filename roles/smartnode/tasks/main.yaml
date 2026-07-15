@@ -38,12 +38,12 @@
 
 - name: Download Rocketpool CLI
   ansible.builtin.get_url:
-    url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/rocketpool-cli-linux-amd64"
+    url: "https://github.com/rocket-pool/smartnode/releases/download/{{ rocketpool.version }}/rocketpool-cli-linux-amd64"
     dest: "{{rp_dl_repo.path}}/rocketpool-cli"
 
 - name: Download Rocketpool daemon
   ansible.builtin.get_url:
-    url: "https://github.com/rocket-pool/smartnode-install/releases/download/{{ rocketpool.version }}/rocketpool-daemon-linux-amd64"
+    url: "https://github.com/rocket-pool/smartnode/releases/download/{{ rocketpool.version }}/rocketpool-daemon-linux-amd64"
     dest: "{{rp_dl_repo.path}}/rocketpoold"
 
 - name: Create install base location

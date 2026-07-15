@@ -7,7 +7,7 @@ User=geth
 Group=geth
 Environment=HOME=/home/geth
 ExecStart=/usr/bin/geth --http \
-  --ipcdisable --metrics --nousb --pprof \
+  --ipcdisable --metrics --pprof \
   --pprof.addr=0.0.0.0 --config {{ configuration.geth.path }} \
   --maxpeers {{ configuration.geth.eth.maxpeers }} \
   --authrpc.jwtsecret {{ execution_jwt_path }} \
